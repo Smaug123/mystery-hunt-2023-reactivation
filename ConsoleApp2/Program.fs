@@ -5,6 +5,7 @@ module Program =
     let words =
         [
             "LEAD"
+            "READ"
             "BEAD"
             "BEAR"
             "BEAT"
@@ -15,7 +16,6 @@ module Program =
             "CULT"
             "CURT"
             "CART"
-            "CARD"
             "CARE"
             "DARE"
             "DANE"
@@ -56,7 +56,7 @@ module Program =
         (instructions : (string * int) list)
         : _ list
         =
-        //if not (restrict board) then [] else
+        if not (restrict board) then [] else
         match instructions with
         | [] -> [board, BondSet.directionList bonds]
         | (word, i) :: rest ->
@@ -160,13 +160,39 @@ module Program =
                     )
                 munged
             )
+            |> List.distinct
         printfn "Before filtering, %i options" after.Length
-        after.[7000] |> List.iter print
-        let filtered =
+
+        let after =
             after
-            |> List.filter (fun positions ->
-                let (endX, endY) = fst (List.last positions)
-                endY = 0 && (abs endX = 1)
+            |> List.sortBy (fun l ->
+                let (x, y), _ = List.last l
+                abs x + abs y
             )
-        printfn "%i total options" filtered.Length
+
+        if after.Length = 0 then 1 else
+
+        let l = after.[1]
+        let positions = l |> List.map fst
+        let minX = positions |> List.map fst |> List.min
+        let maxX = positions |> List.map fst |> List.max
+        let minY = positions |> List.map snd |> List.min
+        let maxY = positions |> List.map snd |> List.max
+        let arr = Array2D.zeroCreate (maxY - minY + 1) (maxX - minX + 1)
+
+        let mutable i = 0
+        for x, y in positions do
+            if i >= instructions.Length then
+                arr.[y - minY, x - minX] <- ValueSome 'M'
+            else
+                arr.[y - minY, x - minX] <- ValueSome words.[i].[snd instructions.[i] - 1]
+            i <- i + 1
+
+        for row in maxY .. -1 .. minY do
+            for col in minX..maxX do
+                match arr.[row - minY, col - minX] with
+                | ValueNone -> printf "."
+                | ValueSome c -> printf "O"
+            printfn ""
+
         0
