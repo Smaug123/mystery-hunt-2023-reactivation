@@ -14,8 +14,8 @@ module TestSeq =
 
         let prop (i : int) (s : int list) =
             let s = i :: s
-            Seq.rangeOrZero s
-            |> (=) (Seq.max s - Seq.min s)
+            let actual = Seq.rangeOrZero s
+            let expected = Seq.max s - Seq.min s
+            expected = actual
 
-        prop
-        |> Check.QuickThrowOnFailure
+        prop |> Check.QuickThrowOnFailure
