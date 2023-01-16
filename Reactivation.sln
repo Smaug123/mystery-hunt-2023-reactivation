@@ -1,8 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "ConsoleApp2", "ConsoleApp2\ConsoleApp2.fsproj", "{D18D6A10-3AAB-4F2A-8CE6-C0D598A8E144}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Reactivation", "Reactivation\Reactivation.fsproj", "{D18D6A10-3AAB-4F2A-8CE6-C0D598A8E144}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Solve.Test", "Solve.Test\Solve.Test.fsproj", "{A4D67E0D-4DE2-4F6F-A443-6BE3B735C173}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Reactivation.Test", "Reactivation.Test\Reactivation.Test.fsproj", "{A4D67E0D-4DE2-4F6F-A443-6BE3B735C173}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

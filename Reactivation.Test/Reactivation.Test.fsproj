@@ -4,12 +4,11 @@
         <TargetFramework>net7.0</TargetFramework>
 
         <IsPackable>false</IsPackable>
-        <GenerateProgramFile>false</GenerateProgramFile>
+        <RootNamespace>Reactivation.Test</RootNamespace>
     </PropertyGroup>
 
     <ItemGroup>
-        <Compile Include="UnitTest1.fs" />
-        <Compile Include="Program.fs" />
+        <Compile Include="TestSeq.fs" />
     </ItemGroup>
 
     <ItemGroup>
@@ -23,7 +22,7 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\ConsoleApp2\ConsoleApp2.fsproj" />
+      <ProjectReference Include="..\Reactivation\Reactivation.fsproj" />
     </ItemGroup>
 
 </Project>

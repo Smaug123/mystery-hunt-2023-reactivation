@@ -1,4 +1,13 @@
-﻿namespace Solve
+﻿namespace Reactivation
+
+open System.Collections.Generic
+open System.Collections.Immutable
+
+type Instruction =
+    | Horizontal = 1
+    | Vertical = 2
+    | UpAndRight = 3
+    | DownAndRight = 4
 
 module Program =
 
@@ -40,20 +49,21 @@ module Program =
                     start.[i - 1] <> next.[i - 1]
                 )
                 |> List.exactlyOne
+                |> enum<Instruction>
             start, instruction
         )
 
-    let restrict (board : Map<int * int, string>) =
-        if Seq.range (board.Keys |> Seq.map snd) > 5 then false
-        elif Seq.range (board.Keys |> Seq.map fst) > 7 then false
+    let restrict (board : IReadOnlyDictionary<int * int, string>) =
+        if Seq.rangeOrZero (board.Keys |> Seq.map snd) > 5 then false
+        elif Seq.rangeOrZero (board.Keys |> Seq.map fst) > 7 then false
         else true
 
     let rec go
         (currX : int)
         (currY : int)
         (bonds : BondSet)
-        (board : Map<int * int, string>)
-        (instructions : (string * int) list)
+        (board : ImmutableDictionary<int * int, string>)
+        (instructions : (string * Instruction) list)
         : _ list
         =
         if not (restrict board) then [] else
@@ -62,81 +72,63 @@ module Program =
         | (word, i) :: rest ->
             // Place this word.
             let newBoard =
-                board
-                |> Map.add (currX, currY) word
+                board.Add ((currX, currY), word)
 
             match i with
-            | 1 ->
+            | Instruction.Horizontal ->
                 // horizontal, i.e. change X
                 [
-                    match Map.tryFind (currX + 1, currY) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX + 1, currY)) then
                         match bonds |> BondSet.addIfOk (currX + 1, currY) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go (currX + 1) currY bonds newBoard rest
-                    | Some _ -> ()
-                    match Map.tryFind (currX - 1, currY) newBoard with
-                    | None ->
+
+                    if not (newBoard.ContainsKey (currX - 1, currY)) then
                         match bonds |> BondSet.addIfOk (currX - 1, currY) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go (currX - 1) currY bonds newBoard rest
-                    | Some _ -> ()
                 ]
-            | 2 ->
+            | Instruction.Vertical ->
                 // vertical, i.e. change Y
                 [
-                    match Map.tryFind (currX, currY + 1) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX, currY + 1)) then
                         match bonds |> BondSet.addIfOk (currX, currY + 1) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go currX (currY + 1) bonds newBoard rest
-                    | Some _ -> ()
-                    match Map.tryFind (currX, currY - 1) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX, currY - 1)) then
                         match bonds |> BondSet.addIfOk (currX, currY - 1) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go currX (currY - 1) bonds newBoard rest
-                    | Some _ -> ()
                 ]
-            | 3 ->
-                // Bottom left to top right
+            | Instruction.UpAndRight ->
                 [
-                    match Map.tryFind (currX + 1, currY + 1) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX + 1, currY + 1)) then
                         match bonds |> BondSet.addIfOk (currX + 1, currY + 1) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go (currX + 1) (currY + 1) bonds newBoard rest
-                    | Some _ -> ()
-                    match Map.tryFind (currX - 1, currY - 1) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX - 1, currY - 1)) then
                         match bonds |> BondSet.addIfOk (currX - 1, currY - 1) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go (currX - 1) (currY - 1) bonds newBoard rest
-                    | Some _ -> ()
                 ]
-            | 4 ->
-                // Top left to bottom right
+            | Instruction.DownAndRight ->
                 [
-                    match Map.tryFind (currX - 1, currY + 1) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX - 1, currY + 1)) then
                         match bonds |> BondSet.addIfOk (currX - 1, currY + 1) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go (currX - 1) (currY + 1) bonds newBoard rest
-                    | Some _ -> ()
-                    match Map.tryFind (currX + 1, currY - 1) newBoard with
-                    | None ->
+                    if not (newBoard.ContainsKey (currX + 1, currY - 1)) then
                         match bonds |> BondSet.addIfOk (currX + 1, currY - 1) (currX, currY) with
                         | None -> ()
                         | Some bonds ->
                             yield! go (currX + 1) (currY - 1) bonds newBoard rest
-                    | Some _ -> ()
                 ]
             | _ -> failwith "bad direction"
 
@@ -145,54 +137,48 @@ module Program =
 
     [<EntryPoint>]
     let main _ =
+        let sw = System.Diagnostics.Stopwatch.StartNew ()
         let after =
             instructions
-            |> go 0 0 BondSet.empty Map.empty
+            |> go 0 0 BondSet.empty ImmutableDictionary.Empty
             |> List.map (fun (examplePlacement, exampleBonds) ->
                 let munged =
                     exampleBonds
                     |> List.choose (fun (srcX, srcY) ->
-                        match examplePlacement.TryFind (srcX, srcY) with
-                        | Some w ->
+                        match examplePlacement.TryGetValue ((srcX, srcY)) with
+                        | true, w ->
                             Some ((srcX, srcY), w)
-                        | None ->
+                        | false, _ ->
                             None
                     )
                 munged
             )
-            |> List.distinct
-        printfn "Before filtering, %i options" after.Length
 
-        let after =
+        let positions =
             after
-            |> List.sortBy (fun l ->
+            |> List.minBy (fun l ->
                 let (x, y), _ = List.last l
                 abs x + abs y
             )
+            |> List.map fst
 
-        if after.Length = 0 then 1 else
+        sw.Stop ()
+        printfn "%i" sw.ElapsedMilliseconds
 
-        let l = after.[1]
-        let positions = l |> List.map fst
-        let minX = positions |> List.map fst |> List.min
-        let maxX = positions |> List.map fst |> List.max
-        let minY = positions |> List.map snd |> List.min
-        let maxY = positions |> List.map snd |> List.max
+        let struct (minX, maxX) = positions |> Seq.map fst |> Seq.minMax |> ValueOption.get
+        let struct (minY, maxY) = positions |> Seq.map snd |> Seq.minMax |> ValueOption.get
         let arr = Array2D.zeroCreate (maxY - minY + 1) (maxX - minX + 1)
 
         let mutable i = 0
         for x, y in positions do
-            if i >= instructions.Length then
-                arr.[y - minY, x - minX] <- ValueSome 'M'
-            else
-                arr.[y - minY, x - minX] <- ValueSome words.[i].[snd instructions.[i] - 1]
+            arr.[y - minY, x - minX] <- words.[i].[int (snd instructions.[i]) - 1]
             i <- i + 1
 
         for row in maxY .. -1 .. minY do
             for col in minX..maxX do
                 match arr.[row - minY, col - minX] with
-                | ValueNone -> printf "."
-                | ValueSome c -> printf "O"
+                | '\000' -> printf "."
+                | _ -> printf "O"
             printfn ""
 
         0
