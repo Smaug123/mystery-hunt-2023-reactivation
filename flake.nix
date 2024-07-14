@@ -42,12 +42,13 @@
           };
       in {
         packages = {
-          fantomas = dotnetTool null "fantomas" (builtins.fromJSON (builtins.readFile ./.config/dotnet-tools.json)).tools.fantomas.version (builtins.head (builtins.filter (elem: elem.pname == "fantomas") ((import ./nix/deps.nix) {fetchNuGet = x: x;}))).hash;
+          fantomas = dotnetTool "fantomas" (builtins.fromJSON (builtins.readFile ./.config/dotnet-tools.json)).tools.fantomas.version (builtins.head (builtins.filter (elem: elem.pname == "fantomas") ((import ./nix/deps.nix) {fetchNuGet = x: x;}))).hash;
           default = pkgs.buildDotnetModule {
             pname = pname;
             version = version;
             src = ./.;
             projectFile = projectFile;
+            testProjectFile = testProjectFile;
             nugetDeps = ./nix/deps.nix; # `nix build .#default.passthru.fetch-deps && ./result` and put the result here
             doCheck = true;
             dotnet-sdk = dotnet-sdk;
