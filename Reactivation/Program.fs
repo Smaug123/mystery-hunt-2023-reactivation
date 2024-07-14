@@ -1,4 +1,4 @@
-﻿namespace Reactivation
+namespace Reactivation
 
 open System.Collections.Generic
 open System.Collections.Immutable
