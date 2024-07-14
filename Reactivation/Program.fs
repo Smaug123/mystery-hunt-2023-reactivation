@@ -12,30 +12,32 @@ type Instruction =
 module Program =
 
     let words =
-        [ "LEAD"
-          "READ"
-          "BEAD"
-          "BEAR"
-          "BEAT"
-          "BOAT"
-          "BOOT"
-          "BOLT"
-          "COLT"
-          "CULT"
-          "CURT"
-          "CART"
-          "CARE"
-          "DARE"
-          "DANE"
-          "DONE"
-          "DONG"
-          "DING"
-          "MING"
-          "MINX"
-          "MIND"
-          "MEND"
-          "MELD"
-          "MEAD" ]
+        [
+            "LEAD"
+            "READ"
+            "BEAD"
+            "BEAR"
+            "BEAT"
+            "BOAT"
+            "BOOT"
+            "BOLT"
+            "COLT"
+            "CULT"
+            "CURT"
+            "CART"
+            "CARE"
+            "DARE"
+            "DANE"
+            "DONE"
+            "DONG"
+            "DING"
+            "MING"
+            "MINX"
+            "MIND"
+            "MEND"
+            "MELD"
+            "MEAD"
+        ]
 
     let instructions =
         words @ [ List.head words ]
@@ -78,43 +80,51 @@ module Program =
                 match i with
                 | Instruction.Horizontal ->
                     // horizontal, i.e. change X
-                    [ if not (newBoard.ContainsKey (currX + 1, currY)) then
-                          match bonds |> BondSet.addIfOk (currX + 1, currY) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go (currX + 1) currY bonds newBoard rest
+                    [
+                        if not (newBoard.ContainsKey (currX + 1, currY)) then
+                            match bonds |> BondSet.addIfOk (currX + 1, currY) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go (currX + 1) currY bonds newBoard rest
 
-                      if not (newBoard.ContainsKey (currX - 1, currY)) then
-                          match bonds |> BondSet.addIfOk (currX - 1, currY) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go (currX - 1) currY bonds newBoard rest ]
+                        if not (newBoard.ContainsKey (currX - 1, currY)) then
+                            match bonds |> BondSet.addIfOk (currX - 1, currY) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go (currX - 1) currY bonds newBoard rest
+                    ]
                 | Instruction.Vertical ->
                     // vertical, i.e. change Y
-                    [ if not (newBoard.ContainsKey (currX, currY + 1)) then
-                          match bonds |> BondSet.addIfOk (currX, currY + 1) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go currX (currY + 1) bonds newBoard rest
-                      if not (newBoard.ContainsKey (currX, currY - 1)) then
-                          match bonds |> BondSet.addIfOk (currX, currY - 1) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go currX (currY - 1) bonds newBoard rest ]
+                    [
+                        if not (newBoard.ContainsKey (currX, currY + 1)) then
+                            match bonds |> BondSet.addIfOk (currX, currY + 1) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go currX (currY + 1) bonds newBoard rest
+                        if not (newBoard.ContainsKey (currX, currY - 1)) then
+                            match bonds |> BondSet.addIfOk (currX, currY - 1) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go currX (currY - 1) bonds newBoard rest
+                    ]
                 | Instruction.UpAndRight ->
-                    [ if not (newBoard.ContainsKey (currX + 1, currY + 1)) then
-                          match bonds |> BondSet.addIfOk (currX + 1, currY + 1) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go (currX + 1) (currY + 1) bonds newBoard rest
-                      if not (newBoard.ContainsKey (currX - 1, currY - 1)) then
-                          match bonds |> BondSet.addIfOk (currX - 1, currY - 1) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go (currX - 1) (currY - 1) bonds newBoard rest ]
+                    [
+                        if not (newBoard.ContainsKey (currX + 1, currY + 1)) then
+                            match bonds |> BondSet.addIfOk (currX + 1, currY + 1) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go (currX + 1) (currY + 1) bonds newBoard rest
+                        if not (newBoard.ContainsKey (currX - 1, currY - 1)) then
+                            match bonds |> BondSet.addIfOk (currX - 1, currY - 1) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go (currX - 1) (currY - 1) bonds newBoard rest
+                    ]
                 | Instruction.DownAndRight ->
-                    [ if not (newBoard.ContainsKey (currX - 1, currY + 1)) then
-                          match bonds |> BondSet.addIfOk (currX - 1, currY + 1) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go (currX - 1) (currY + 1) bonds newBoard rest
-                      if not (newBoard.ContainsKey (currX + 1, currY - 1)) then
-                          match bonds |> BondSet.addIfOk (currX + 1, currY - 1) (currX, currY) with
-                          | None -> ()
-                          | Some bonds -> yield! go (currX + 1) (currY - 1) bonds newBoard rest ]
+                    [
+                        if not (newBoard.ContainsKey (currX - 1, currY + 1)) then
+                            match bonds |> BondSet.addIfOk (currX - 1, currY + 1) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go (currX - 1) (currY + 1) bonds newBoard rest
+                        if not (newBoard.ContainsKey (currX + 1, currY - 1)) then
+                            match bonds |> BondSet.addIfOk (currX + 1, currY - 1) (currX, currY) with
+                            | None -> ()
+                            | Some bonds -> yield! go (currX + 1) (currY - 1) bonds newBoard rest
+                    ]
                 | _ -> failwith "bad direction"
 
     let print ((x, y), s) = printfn "%i, %i: %s" x y s
