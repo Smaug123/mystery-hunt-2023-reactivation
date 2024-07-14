@@ -7,6 +7,16 @@
     hash = "sha256-2m4YevDp9CRm/Ci2hguDXd6DUMElRg3hNAne9LHntWM=";
   })
   (fetchNuGet {
+    pname = "FsCheck";
+    version = "3.0.0-rc3";
+    hash = "sha256-4Z9Qv+vccrXWh2Fjdwdmjc1YgW+Dcx73ESkdAnHqxOY=";
+  })
+  (fetchNuGet {
+    pname = "FsUnit";
+    version = "6.0.0";
+    hash = "sha256-q87WQf6MqGhzvaQ7WkkUlCdoE94DY0CD5PaXEj64A6M=";
+  })
+  (fetchNuGet {
     pname = "Microsoft.AspNetCore.App.Ref";
     version = "7.0.20";
     hash = "sha256-OEDXXjQ1HDRPiA4Y1zPr1xUeH6wlzTCJpts+DZL61wI=";
@@ -30,6 +40,16 @@
     pname = "Microsoft.AspNetCore.App.Runtime.osx-x64";
     version = "7.0.20";
     hash = "sha256-+MQMRFzfG2CbNJnfw0buP4VorL2yR+T4UeEBSbKSmPY=";
+  })
+  (fetchNuGet {
+    pname = "Microsoft.CodeCoverage";
+    version = "17.10.0";
+    hash = "sha256-yQFwqVChRtIRpbtkJr92JH2i+O7xn91NGbYgnKs8G2g=";
+  })
+  (fetchNuGet {
+    pname = "Microsoft.NET.Test.Sdk";
+    version = "17.10.0";
+    hash = "sha256-rkHIqB2mquNXF89XBTFpUL2z5msjTBsOcyjSBCh36I0=";
   })
   (fetchNuGet {
     pname = "Microsoft.NETCore.App.Host.linux-arm64";
@@ -75,5 +95,35 @@
     pname = "Microsoft.NETCore.App.Runtime.osx-x64";
     version = "7.0.20";
     hash = "sha256-yktNSySitxWbO6LjcxUuewWFMF2EbcoM2w18CqxmVlc=";
+  })
+  (fetchNuGet {
+    pname = "Microsoft.TestPlatform.ObjectModel";
+    version = "17.10.0";
+    hash = "sha256-3YjVGK2zEObksBGYg8b/CqoJgLQ1jUv4GCWNjDhLRh4=";
+  })
+  (fetchNuGet {
+    pname = "Microsoft.TestPlatform.TestHost";
+    version = "17.10.0";
+    hash = "sha256-+yzP3FY6WoOosSpYnB7duZLhOPUZMQYy8zJ1d3Q4hK4=";
+  })
+  (fetchNuGet {
+    pname = "Newtonsoft.Json";
+    version = "13.0.1";
+    hash = "sha256-K2tSVW4n4beRPzPu3rlVaBEMdGvWSv/3Q1fxaDh4Mjo=";
+  })
+  (fetchNuGet {
+    pname = "NUnit";
+    version = "4.1.0";
+    hash = "sha256-srzj0lf2ReKw41TnigZwf8rqKKNzGRRVrgN3hR/vRjo=";
+  })
+  (fetchNuGet {
+    pname = "NUnit3TestAdapter";
+    version = "4.5.0";
+    hash = "sha256-ER3ogl0L5FYyc6pVVPY1ch+AQxG/WgFcnWECnYQJPes=";
+  })
+  (fetchNuGet {
+    pname = "System.Reflection.Metadata";
+    version = "1.6.0";
+    hash = "sha256-JJfgaPav7UfEh4yRAQdGhLZF1brr0tUWPl6qmfNWq/E=";
   })
 ]
